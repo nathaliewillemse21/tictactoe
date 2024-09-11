@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            gap: 5px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            background-color: #d81898;
+            font-size: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .cell:hover {
+            background-color: #e0e0e0;
+        }
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic-Tac-Toe</h1>
+    <div class="board" id="board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <button id="restart">Start Over</button>
+
+    <script>
+        const boardElement = document.getElementById('board');
+        const cells = document.querySelectorAll('.cell');
+        const restartButton = document.getElementById('restart');
+
+        let currentPlayer = 'X';
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                if (cell.textContent === '') {
+                    cell.textContent = currentPlayer;
+                    checkWinner();
+                    currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+                }
+            });
+        });
+
+        function checkWinner() {
+            const boardState = Array.from(cells).map(cell => cell.textContent);
+            const winningCombinations = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6]  // Diagonals
+            ];
+
+            winningCombinations.forEach(combo => {
+                const [a, b, c] = combo;
+                if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
+                    alert(`Player ${boardState[a]} wins!`);
+                    resetBoard();
+                }
+            });
+
+            if (!boardState.includes('') && !document.querySelector('h1').textContent.includes('wins')) {
+                alert("It's a draw!");
+                resetBoard();
+            }
+        }
+
+        function resetBoard() {
+            cells.forEach(cell => {
+                cell.textContent = '';
+            });
+            currentPlayer = 'X';
+        }
+
+        restartButton.addEventListener('click', resetBoard);
+    </script>
+</body>
+</html>
